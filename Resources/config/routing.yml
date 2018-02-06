@@ -1,0 +1,3 @@
+generic_esol_db_homepage:
+    path:     /
+    defaults: { _controller: GenericEsolDbBundle:Default:index }
