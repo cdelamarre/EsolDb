@@ -11,15 +11,9 @@ class ConnTest extends TestCase
 
     public function testIsConfigEsolDbComplete()
     {
-        $o = new \Esol\Db\Params("mysql_test");
-        $o->initParams();
-        $this->assertNotEmpty($o->getDriver(), "Driver is Empty");
-        $this->assertNotEmpty($o->getServerHost(), "Host is Empty");
-        $this->assertNotEmpty($o->getServerPort(), "Port is Empty");
-        $this->assertNotEmpty($o->getDbName(), "DbName is Empty");
-        $this->assertNotEmpty($o->getUserName(), "UserName is Empty");
-        $this->assertNotNull($o->getPassword(), "Password is Null");
-
+        $o = new \Esol\Db\Conn("mysql_test");
+        var_dump($o->getDbConn());
+        $this->assertTrue(true);
     }
 
 

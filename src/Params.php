@@ -35,9 +35,10 @@ class Params
 
     public function initParams()
     {
-        $configDirectories = __DIR__ . '/../config/packages/tests/';
+
+        $configDirectories = \Esol\Sy\Tools::getProjectDir() . '/config/packages/tests/';
         $a = Yaml::parseFile($configDirectories . 'esolDb.yml');
-        $o = (object) $a['parameters'][$this->getDbToRequest()];
+        $o = (object)$a['parameters'][$this->getDbToRequest()];
 
         $this->setDriver($o->driver);
         $this->setServerHost($o->host);
@@ -50,7 +51,8 @@ class Params
 
     private function initParamsOld()
     {
-        $this->setParametersFilePath(__DIR__ . '/config/packages/dev/esolDb.yml');
+        $projectDir = \Esol\Sy\Tools::getProjectDir();
+        $this->setParametersFilePath($projectDir . '/config/packages/dev/esolDb.yml');
         $vars = new Vars($this->getParametersFilePath());
 
         $this->setDriver($vars['parameters.' . $this->getDbToRequest() . '.driver']);

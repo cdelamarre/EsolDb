@@ -4,8 +4,8 @@ namespace Esol\Db;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Esol\Db\Conn;
-
-class EsolDb extends Bundle
+use Esol\Sy\tools;
+class EsolDb 
 {
 
     private $esolDbParams;
@@ -20,7 +20,8 @@ class EsolDb extends Bundle
         $numargs = func_num_args();
         $arg_list = func_get_args();
         if ($numargs == 0) {
-            $this->setSqlDirPath(__DIR__ . '/../Resources/sql/');
+            $sqlDir = \Esol\Sy\Tools::getProjectDir()."/sql/";
+            $this->setSqlDirPath($sqlDir);
         }
         if ($numargs == 1) {
             $dbToRequest = $arg_list[0];
@@ -62,6 +63,7 @@ class EsolDb extends Bundle
     public function getArrayData()
     {
         $sqlResult = $this->getResultFromSqlr($this->getSqlr());
+        var_dump($sqlResult);
         return $this->getArrayDataFromSqlResult($sqlResult);
     }
 
@@ -261,7 +263,13 @@ class EsolDb extends Bundle
             }
         }
         if ($numargs == 1) {
-            $this->sqlFilePath = $arg_list[0];
+            $sqlFilePath = $arg_list[0];
+            if( strpos($sqlFilePath, './') !== false){
+                $sqlDir = \Esol\Sy\Tools::getProjectDir()."/sql/";
+
+                $sqlFilePath = $sqlDir.$sqlFilePath;
+            }
+            $this->sqlFilePath = $sqlFilePath;
         }
     }
 
