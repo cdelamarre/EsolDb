@@ -1,0 +1,37 @@
+{
+    "name": "esol/db",
+    "type": "symfony-bundle",
+    "keywords": ["esol", "test"],
+    "homepage": "http://www.e-solutions.tm.fr/",
+    "license": "MIT",
+    "authors": [{
+        "name": "cdelamarre",
+        "email": "cdelamarre@e-solutions.tm.fr",
+        "homepage": "http://www.e-solutions.tm.fr/",
+        "role": "Developer"
+    }],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.5.0",
+        "psr/link": "~1.0@dev",
+        "symfony/config": "^4.1",
+        "symfony/http-kernel": "^4.1",
+        "symfony/yaml": "^4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Esol\\Db\\": "src/"
+        }
+    },
+
+    "scripts": {
+        "test": [
+            "Esol\\Test\\Test::printTest2",
+            "MyVendor\\MyClass\\MyClass::test"
+        ]
+    }
+}
