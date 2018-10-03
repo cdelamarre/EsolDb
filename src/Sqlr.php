@@ -1,15 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Esol\Db;
 
 /**
  * Description of EsolDbSqlr
+ * 
  *
  * @author cdelamarre
  */
@@ -26,6 +21,7 @@ class Sqlr {
 
     private $sqlr;
     private $aSqlrVars = array();
+
 
     public function getASqlrVars() {
         return $this->aSqlrVars;
@@ -63,6 +59,15 @@ class Sqlr {
         $this->rawSqlr = file_get_contents($this->getSqlFilePath());
     }
 
+    /**
+     * Transforme la chaine de caractère présente dans $sqlr en ayant remplacé toutes les occurences du tableau aSqlrVars
+     * qui figuraient entre crochet [] ou accolade {}
+     * 
+     * @param string $sqlr
+     * 
+     * @return void
+     * 
+     */
     public function setSqlrWithParams($sqlr) {
         foreach ($this->getASqlrVars() as $key => $value) {
             $value = addslashes($value);
@@ -75,18 +80,44 @@ class Sqlr {
         $this->setSqlr($sqlr);
     }
 
-    public function removeUnknownKey($s){
+   /**
+    * Return une chaine de caractère nettoyée des paramètres entre [] et entre {}
+    * @param string $s
+    *
+    * @return string
+    *
+    */ 
+     public function removeUnknownKey(string $s){
         $pattern = '/\[\[[^\[^\]]+\]\]/i';
+        $replacement = '';
+        $s = preg_replace($pattern, $replacement, $s);
+        $pattern = '/\{\{[^\{^\}]+\}\}/i';
         $replacement = '';
         $s = preg_replace($pattern, $replacement, $s);
         return $s;
     }
 
+    /**
+     * Return lr contenu du fichier contenant la requète
+     * 
+     * @return string
+     * 
+     */
     public function getRawSqlrFromFilePath() {
         return file_get_contents($this->getSqlFilePath());
     }
 
-    public function replace_in_sql($sqlr) {
+    /**
+     * Return la chaine de caractère en ayant remplacé toutes les occurences du tableau aSqlrVars
+     * qui figuraient entre crochet
+     * Inutilisé au 20181002
+     * 
+     * @param string $sqlr
+     * 
+     * @return string
+     * 
+     */
+    public function replace_in_sqlToRemove20181002($sqlr) {
         foreach ($this->getASqlrVars() as $key => $value) {
             $value = addslashes($value);
             $value = utf8_encode($value);

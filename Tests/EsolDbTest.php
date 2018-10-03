@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-
+use Esol\Sy\Tools;
 
 class EsolDbTest extends TestCase
 {
