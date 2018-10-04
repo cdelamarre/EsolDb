@@ -64,7 +64,6 @@ class EsolDb
     public function getArrayData()
     {
         $sqlResult = $this->getResultFromSqlr($this->getSqlr());
-        var_dump($sqlResult);
         return $this->getArrayDataFromSqlResult($sqlResult);
     }
 
@@ -152,12 +151,20 @@ class EsolDb
 
     public function setASqlrVarsKeyValue($key, $value)
     {
+        dump($key." ".$value);
         $this->aSqlrVars[$key] = $value;
     }
 
     public function getASqlrVarsKeyValue($key)
     {
-        return $this->aSqlrVars->get($key);
+        $v = null;
+        if(is_object($this->aSqlrVars)){
+            $v = $this->aSqlrVars->get($key);
+        }
+        if(is_array($this->aSqlrVars) && in_array($key, $this->aSqlrVars)){
+            $v = $this->aSqlrVars->get($key);
+        }
+        return $v;
     }
 
     public function setASqlrVarsFromRequestQuery($requestQuery)
