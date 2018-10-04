@@ -4,8 +4,9 @@ namespace Esol\Db;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Esol\Db\Conn;
-use \Esol\Sy\Tools\Tools  as SyTools;
-class EsolDb 
+use \Esol\Sy\Tools\Tools as SyTools;
+
+class EsolDb
 {
 
     private $esolDbParams;
@@ -21,7 +22,7 @@ class EsolDb
         $arg_list = func_get_args();
         if ($numargs == 0) {
             $syTools = new SyTools();
-            $sqlDir = $syTools->getProjectDir()."/Resources/sql/";
+            $sqlDir = $syTools->getProjectDir() . "/Resources/sql/";
             $this->setSqlDirPath($sqlDir);
         }
         if ($numargs == 1) {
@@ -151,17 +152,16 @@ class EsolDb
 
     public function setASqlrVarsKeyValue($key, $value)
     {
-        dump($key." ".$value);
         $this->aSqlrVars[$key] = $value;
     }
 
     public function getASqlrVarsKeyValue($key)
     {
         $v = null;
-        if(is_object($this->aSqlrVars)){
+        if (is_object($this->aSqlrVars)) {
             $v = $this->aSqlrVars->get($key);
         }
-        if(is_array($this->aSqlrVars) && in_array($key, $this->aSqlrVars)){
+        if (is_array($this->aSqlrVars) && in_array($key, $this->aSqlrVars)) {
             $v = $this->aSqlrVars->get($key);
         }
         return $v;
@@ -175,7 +175,9 @@ class EsolDb
     public function getArrayDataFromSqlResult($sqlResult)
     {
         if ($this->getASqlrVarsKeyValue("showSqlr")) {
-            print "<pre>" . $this->getPrintSqlr() . "<pre>";
+            $sqlr = $this->getPrintSqlr();
+            $sqlr = str_replace("\\", "", $sqlr);
+            dump($sqlr);
         }
         $resultData = array();
         if ($this->esolDbConn->getDriver() == 'pdo_mysql') {
@@ -272,9 +274,9 @@ class EsolDb
         }
         if ($numargs == 1) {
             $sqlFilePath = $arg_list[0];
-            if( strpos($sqlFilePath, './') !== false){
+            if (strpos($sqlFilePath, './') !== false) {
                 $syTools = new SyTools();
-                $sqlFilePath = $syTools->getProjectDir().'/'.$sqlFilePath;
+                $sqlFilePath = $syTools->getProjectDir() . '/' . $sqlFilePath;
             }
             $this->sqlFilePath = $sqlFilePath;
         }
