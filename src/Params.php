@@ -9,7 +9,7 @@
 namespace Esol\Db;
 
 use Symfony\Component\Yaml\Yaml;
-
+use \Esol\Sy\Tools\Tools  as SyTools;
 /**
  * Description of EsolObject
  *
@@ -36,7 +36,9 @@ class Params
     public function initParams()
     {
 
-        $configDirectories = \Esol\Sy\Tools::getProjectDir() . '/config/packages/tests/';
+        $syTools = new SyTools();
+        $projectDir = $syTools->getProjectDir();
+        $configDirectories = $projectDir . '/config/packages/tests/';
         $a = Yaml::parseFile($configDirectories . 'esolDb.yml');
         $o = (object)$a['parameters'][$this->getDbToRequest()];
 
@@ -51,7 +53,8 @@ class Params
 
     private function initParamsOld()
     {
-        $projectDir = \Esol\Sy\Tools::getProjectDir();
+        $syTools = new SyTools();
+        $projectDir = $syTools->getProjectDir();
         $this->setParametersFilePath($projectDir . '/config/packages/dev/esolDb.yml');
         $vars = new Vars($this->getParametersFilePath());
 

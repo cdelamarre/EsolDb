@@ -22,20 +22,5 @@ class SqlrTest extends TestCase
         $this->assertNotContains('}}', $s);
     }
 
-    public function testGetRawSqlrFromFilePath()
-    {
-        $t = new \Esol\Sy\Tools\Tools();
-
-        $o = new \Esol\Db\Sqlr();
-
-        print $t->getRootDir()."]";
-        $s = '';
-//        $o = new \Esol\Db\EsolDb("mysql_test", "./Ressources/sql/test.sql");
-//        $s = $o->getRawSqlrFromFilePath();
-        $this->assertNotEmpty($s);      
-
-
-
-    }
 
 }

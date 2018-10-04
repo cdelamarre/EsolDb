@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Esol\Sy\Tools;
+use Esol\Sy\Tools\Tools;
 
 class EsolDbTest extends TestCase
 {
 
     public function test1()
     {
-        $o = new \Esol\Db\EsolDb("mysql_test", "./Ressources/sql/test.sql");
+        $o = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/test.sql");
          
         $request = new Request();
         $request->query->set("ORDER_BY", "name");

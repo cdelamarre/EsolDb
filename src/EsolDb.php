@@ -4,7 +4,7 @@ namespace Esol\Db;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Esol\Db\Conn;
-use Esol\Sy\tools;
+use \Esol\Sy\Tools\Tools  as SyTools;
 class EsolDb 
 {
 
@@ -20,7 +20,8 @@ class EsolDb
         $numargs = func_num_args();
         $arg_list = func_get_args();
         if ($numargs == 0) {
-            $sqlDir = \Esol\Sy\Tools::getProjectDir()."/sql/";
+            $syTools = new SyTools();
+            $sqlDir = $syTools->getProjectDir()."/Resources/sql/";
             $this->setSqlDirPath($sqlDir);
         }
         if ($numargs == 1) {
@@ -265,9 +266,8 @@ class EsolDb
         if ($numargs == 1) {
             $sqlFilePath = $arg_list[0];
             if( strpos($sqlFilePath, './') !== false){
-                $sqlDir = \Esol\Sy\Tools::getProjectDir()."/sql/";
-
-                $sqlFilePath = $sqlDir.$sqlFilePath;
+                $syTools = new SyTools();
+                $sqlFilePath = $syTools->getProjectDir().'/'.$sqlFilePath;
             }
             $this->sqlFilePath = $sqlFilePath;
         }

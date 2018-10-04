@@ -11,7 +11,7 @@ class ParamsTest extends TestCase
 
     public function testIsConfigEsolDbExist()
     {
-        $configDirectories = __DIR__.'/../config/packages/tests/';
+        $configDirectories = __DIR__.'/../app/config/packages/tests/';
         $fileToTest = $configDirectories."esolDb.yml";
 
         $this->assertTrue(file_exists($fileToTest), "File ".$fileToTest." does not exist");
