@@ -87,7 +87,7 @@ class Sqlr {
     * @return string
     *
     */ 
-     public function removeUnknownKey(string $s){
+     public function removeUnknownKey($s){
         $pattern = '/\[\[[^\[^\]]+\]\]/i';
         $replacement = '';
         $s = preg_replace($pattern, $replacement, $s);
