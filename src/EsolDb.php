@@ -186,7 +186,6 @@ class EsolDb
         if ($this->getASqlrVarsKeyValue("showSqlr")) {
             $sqlr = $this->getPrintSqlr();
             $sqlr = str_replace("\\", "", $sqlr);
-            dump($sqlr);
         }
         $resultData = array();
         if ($this->esolDbConn->getDriver() == 'pdo_mysql') {

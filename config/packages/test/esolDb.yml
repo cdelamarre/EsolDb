@@ -1,0 +1,17 @@
+# This file is auto-generated during the composer install
+parameters:
+    pgsql_test: 
+        driver: pdo_pgsql
+        host: db4free.net
+        port: 5432
+        name: esoldb
+        user: esoldb
+        password: '4GwpEudP47s5qGD'    
+
+    mysql_test: 
+        driver: pdo_mysql
+        host: db4free.net
+        port: 3306
+        name: esoldb
+        user: esoldb
+        password: '4GwpEudP47s5qGD'
