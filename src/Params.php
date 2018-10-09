@@ -94,7 +94,7 @@ class Params
         return $aParams;
     }
 
-    public function initEsolDbYml()
+    public function initEsolDbYml($whichConfDir)
     {
 
         $syTools = new SyTools();
@@ -102,17 +102,14 @@ class Params
         $configDir = $projectDir . '/config/packages/';
 
         $aDb = array(
-            'pgsql_test' => $this->getAPgsqlDemo(), 
+            'pgsql_test' => $this->getAPgsqlDemo(),
             'mysql_test' => $this->getAMysqlDemo()
         );
         $aRoot = array(
             'parameters' => $aDb
         );
         $yaml = Yaml::dump($aRoot, 10);
-
-        file_put_contents($configDir . 'dev' . '/esolDb.yml', $yaml);
-        file_put_contents($configDir . 'test' . '/esolDb.yml', $yaml);
-
+        file_put_contents($configDir . $whichConfDir . '/esolDb.yml', $yaml);
     }
 
 
@@ -148,7 +145,7 @@ class Params
         $this->renameConfDirTestsToTestIfNecessary();
 
 
-        $configDir .= $this->environment.'/';
+        $configDir .= $this->environment . '/';
 
         if (!file_exists($configDir) && !is_dir($configDir)) {
             $this->mkConfDir($configDir);
@@ -163,6 +160,15 @@ class Params
      */
     public function getEsolDbConfigFilePath()
     {
+        if (!file_exists($configDir . 'prod' . '/esolDb.yml')) {
+            $this->initEsolDbYml('prod');
+        }
+        if (!file_exists($configDir . 'dev' . '/esolDb.yml')) {
+            $this->initEsolDbYml('dev');
+        }
+        if (!file_exists($configDir . 'test' . '/esolDb.yml')) {
+            $this->initEsolDbYml('test');
+        }
         return $this->getConfDir() . 'esolDb.yml';
     }
 
