@@ -18,14 +18,25 @@ use \Esol\Sy\Tools\Tools as SyTools;
 class Params
 {
 
+    private $environment = 'prod';
+
     function __construct()
     {
         $numargs = func_num_args();
         $arg_list = func_get_args();
-        if ($numargs == 1) {
+        if ($numargs > 1) {
             $dbToRequest = $arg_list[0];
             $this->setDbToRequest($dbToRequest);
         }
+        if ($numargs == 2) {
+            $this->$environment = $arg_list[1];
+        }
+
+    }
+
+    public function setEnvironment($s)
+    {
+        $this->environment = $s;
     }
 
     public function IsConfigEsolDbExist()
@@ -136,7 +147,8 @@ class Params
 
         $this->renameConfDirTestsToTestIfNecessary();
 
-        $configDir .= 'prod/';
+
+        $configDir .= $this->environment.'/';
 
         if (!file_exists($configDir) && !is_dir($configDir)) {
             $this->mkConfDir($configDir);

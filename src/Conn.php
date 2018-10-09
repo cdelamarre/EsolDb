@@ -16,11 +16,12 @@ namespace Esol\Db;
 
 use Esol\Db\Params;
 
-class Conn {
-
+class Conn
+{
     private $esolDbParams = null;
-
-    function __construct() {
+    private $environment = 'dev';
+    function __construct()
+    {
         $numargs = func_num_args();
         $arg_list = func_get_args();
         $this->esolDbParams = new Params();
@@ -30,16 +31,26 @@ class Conn {
         }
     }
 
-    public function setDbToRequest($dbToRequest) {
+    public function setEnvironment($s)
+    {
+        $this->environment = $s;
+        $this->esolDbParams->setEnvironment($s);
+        $this->esolDbParams->initParams();
+    }
+
+
+    public function setDbToRequest($dbToRequest)
+    {
         $this->esolDbParams->setDbToRequest($dbToRequest);
     }
 
-    public function getDriver() {
+    public function getDriver()
+    {
         return $this->esolDbParams->getDriver();
     }
 
-    public function setDbConn() {
-
+    public function setDbConn()
+    {
         $dbConnection = '';
         try {
             if ($this->esolDbParams->getDriver() == 'pdo_mysql') {
@@ -55,7 +66,8 @@ class Conn {
         $this->dbConn = $dbConnection;
     }
 
-    public function getDbConnMysqli() {
+    public function getDbConnMysqli()
+    {
         $conn = mysqli_connect($this->esolDbParams->getServerHost(), $this->esolDbParams->getUserName(), $this->esolDbParams->getPassword(), $this->esolDbParams->getDbName());
         if (mysqli_connect_errno()) {
             echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -64,7 +76,8 @@ class Conn {
         return $conn;
     }
 
-    public function getDbConnPgsql() {
+    public function getDbConnPgsql()
+    {
         $dbConnectionString = " host=" . $this->esolDbParams->getServerHost();
         $dbConnectionString .= " port=" . $this->esolDbParams->getServerPort();
         $dbConnectionString .= " dbname=" . $this->esolDbParams->getDbName();
@@ -74,7 +87,8 @@ class Conn {
         return pg_connect($dbConnectionString) or die('Connexion impossible : ' . pg_last_error());
     }
 
-    public function unsetDbConn() {
+    public function unsetDbConn()
+    {
         if ($this->esolDbParams->getDriver() == 'pdo_mysql') {
             $this->getDbconn()->close();
         }
@@ -85,7 +99,8 @@ class Conn {
 
     private $dbConn;
 
-    public function getDbConn() {
+    public function getDbConn()
+    {
         return $this->dbConn;
     }
 

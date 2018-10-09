@@ -13,6 +13,7 @@ class EsolDb
     private $esolDbConn;
     private $esolDbResult;
     private $sqlr;
+    private $environment = 'dev';
 
     function __construct()
     {
@@ -35,6 +36,7 @@ class EsolDb
             $this->setDbToRequest($dbToRequest);
             $this->setSqlFilePath($sqlFilePath);
         }
+        
         if ($numargs == 3) {
             $dbToRequest = $arg_list[0];
             $sqlFileDir = $arg_list[1];
@@ -44,6 +46,13 @@ class EsolDb
             $this->setSqlFileName($sqlFileName);
             $this->setSqlFilePath();
         }
+    }
+
+    public function setEnvironment($s)
+    {
+        $this->environment = $s;
+        $this->esolDbConn->setEnvironment($s);
+
     }
 
     public function setDbToRequest($s)
