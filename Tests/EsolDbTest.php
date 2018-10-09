@@ -1,6 +1,6 @@
 <?php
 
-// ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/ParamsTest
+// ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/EsolDbTest
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;

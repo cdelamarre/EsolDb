@@ -1,4 +1,5 @@
 <?php
+// ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/initEsolDbTest
 
 declare (strict_types = 1);
 
@@ -40,6 +41,9 @@ class InitEsolDbTest extends TestCase
         $this->assertNotNull($isAppTreeStructure);
     }
 
+    /**
+     * 
+     */
     public function testBuildRelativePathDir(){
         $relativePathToBuild = 'toto/sql2';
         $o = new \Esol\Sy\Tools\Tools;

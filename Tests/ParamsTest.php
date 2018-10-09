@@ -9,9 +9,29 @@ use PHPUnit\Framework\TestCase;
 class ParamsTest extends TestCase
 {
 
+
+    public function testInitEsolDbYml()
+    {
+
+        $kernelNameClass = $this->getKernelClass(); // Récupération du nom de la classe Kernel
+$kernel = new $kernelNameClass('test', true); // Instanciation de la classe dans un environnement de test avec débogage
+$kernel->boot(); // On boote le kernel (comme un pc)
+$this->em = $kernel->getContainer()->get('MonSvc');
+
+//        print $this->environment.self::CONFIG_EXTS."]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]";
+
+        $o = new \Esol\Db\Params("mysql_test");
+    
+        $configDir = __DIR__.'/../app/config/packages/tests/';
+        $fileToTest = $configDir."esolDb.yml";
+        $o->initEsolDbYml();
+
+        $this->assertTrue(file_exists($fileToTest), "File ".$fileToTest." does not exist");
+    }
+
     public function testIsConfigEsolDbExist()
     {
-        $configDirectories = __DIR__.'/../app/config/packages/tests/';
+        $configDirectories = __DIR__.'/../config/packages/prod/';
         $fileToTest = $configDirectories."esolDb.yml";
 
         $this->assertTrue(file_exists($fileToTest), "File ".$fileToTest." does not exist");
