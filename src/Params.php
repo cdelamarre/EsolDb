@@ -160,6 +160,10 @@ class Params
      */
     public function getEsolDbConfigFilePath()
     {
+        $syTools = new SyTools();
+        $projectDir = $syTools->getProjectDir();
+        $configDir = $projectDir . '/config/packages/';
+        
         if (!file_exists($configDir . 'prod' . '/esolDb.yml')) {
             $this->initEsolDbYml('prod');
         }
