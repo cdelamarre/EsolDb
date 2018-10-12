@@ -9,7 +9,7 @@ Cette librairie permet d'intérroge des bases de données POSTGRESQL ou MYSQL:
 composer require esol/db
 ```
 
-##Extensions php à activer dans php.ini
+## Extensions php à activer dans php.ini
 
 ### Mysql
 extension=php_mysqli.dll
