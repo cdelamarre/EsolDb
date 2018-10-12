@@ -8,9 +8,11 @@ namespace Esol\Db;
  *
  * @author cdelamarre
  */
-class Sqlr {
+class Sqlr
+{
 
-    function __construct() {
+    function __construct()
+    {
         $numargs = func_num_args();
         $arg_list = func_get_args();
         if ($numargs == 1) {
@@ -23,11 +25,13 @@ class Sqlr {
     private $aSqlrVars = array();
 
 
-    public function getASqlrVars() {
+    public function getASqlrVars()
+    {
         return $this->aSqlrVars;
     }
 
-    public function setASqlrVars() {
+    public function setASqlrVars()
+    {
         $numargs = func_num_args();
         $arg_list = func_get_args();
         if ($numargs == 1) {
@@ -40,22 +44,26 @@ class Sqlr {
         }
     }
 
-    public function getSqlr() {
+    public function getSqlr()
+    {
         return $this->sqlr;
     }
 
-    public function setSqlr($sqlr) {
+    public function setSqlr($sqlr)
+    {
         $this->sqlr = $sqlr;
     }
 
-    public function setSqlrFromFileName() {
+    public function setSqlrFromFileName()
+    {
         $this->setRawSqlrFromFilePath();
         $this->setSqlrWithParams($this->getRawSqlrFromFilePath());
     }
 
     private $rawSqlr;
 
-    public function setRawSqlrFromFilePath() {
+    public function setRawSqlrFromFilePath()
+    {
         $this->rawSqlr = file_get_contents($this->getSqlFilePath());
     }
 
@@ -68,7 +76,9 @@ class Sqlr {
      * @return void
      * 
      */
-    public function setSqlrWithParams($sqlr) {
+    public function setSqlrWithParams($sqlr)
+    {
+        $sqlr = $this->getReplaceMultilineCommentsFromSinglLine($sqlr);
         foreach ($this->getASqlrVars() as $key => $value) {
             $value = addslashes($value);
             $value = utf8_encode($value);
@@ -76,24 +86,42 @@ class Sqlr {
             $sqlr = str_replace('[[' . $key . ']]', $value, $sqlr);
             $sqlr = str_replace('{{' . $key . '}}', $value, $sqlr);
         }
-        $sqlr = $this->removeUnknownKey($sqlr);
+
         $this->setSqlr($sqlr);
     }
 
-   /**
-    * Return une chaine de caractère nettoyée des paramètres entre [] et entre {}
-    * @param string $s
-    *
-    * @return string
-    *
-    */ 
-     public function removeUnknownKey($s){
+    /**
+     * getReplaceMultilineCommentsFromSinglLine
+     * remplace les commentaire monoligne en commentaire multiligne
+     * @param string
+     * @return string
+     */
+    public function getReplaceMultilineCommentsFromSinglLine($s)
+    {
+        $s .= "\n";
+        $pattern = '/(--)(.*)(\n)/';
+        $replacement = "/*$2*/\n";
+        $s = preg_replace($pattern, $replacement, $s);
+        return $s;
+    }
+
+
+    /**
+     * Return une chaine de caractère nettoyée des paramètres entre [] et entre {}
+     * @param string $s
+     *
+     * @return string
+     *
+     */
+    public function removeUnknownKey($s)
+    {
         $pattern = '/\[\[[^\[^\]]+\]\]/i';
         $replacement = '';
         $s = preg_replace($pattern, $replacement, $s);
         $pattern = '/\{\{[^\{^\}]+\}\}/i';
         $replacement = '';
         $s = preg_replace($pattern, $replacement, $s);
+
         return $s;
     }
 
@@ -103,7 +131,8 @@ class Sqlr {
      * @return string
      * 
      */
-    public function getRawSqlrFromFilePath() {
+    public function getRawSqlrFromFilePath()
+    {
         return file_get_contents($this->getSqlFilePath());
     }
 
@@ -117,7 +146,8 @@ class Sqlr {
      * @return string
      * 
      */
-    public function replace_in_sqlToRemove20181002($sqlr) {
+    public function replace_in_sqlToRemove20181002($sqlr)
+    {
         foreach ($this->getASqlrVars() as $key => $value) {
             $value = addslashes($value);
             $value = utf8_encode($value);
@@ -127,11 +157,13 @@ class Sqlr {
         return $sqlr;
     }
 
-    public function getSqlFilePath() {
+    public function getSqlFilePath()
+    {
         return $this->sqlFilePath;
     }
 
-    public function setSqlFilePath($s) {
+    public function setSqlFilePath($s)
+    {
         $this->sqlFilePath = $s;
     }
 
