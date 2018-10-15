@@ -11,9 +11,11 @@ composer require esol/db
 
 ## Extensions php à activer dans php.ini
 
-### Mysql
+Esol/Db utilise les extensions php_mysqli et php_pgsql
+
+### Pour Mysql
 extension=php_mysqli.dll
-### Pgsql
+### Pour Pgsql
 extension=php_pgsql.dll
 
 ## Configuration

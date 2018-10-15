@@ -12,6 +12,11 @@ class EsolDbTest extends TestCase
 {
 
 
+    /**
+     * testSqlSelectWithoutParameters
+     *
+     * @return void
+     */
     public function testSqlSelectWithoutParameters()
     {
         print "----------------------testSqlSelectWithoutParameters----------------------";
@@ -61,7 +66,7 @@ class EsolDbTest extends TestCase
 
 //        $sqlr = $esolDb->getSqlr();
 
-        $this->$this->assertNotEquals('', $esolDb->getSqlr());
+        $this->assertNotEquals('', $esolDb->getSqlr());
     }
 
 
