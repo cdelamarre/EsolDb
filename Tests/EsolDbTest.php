@@ -19,7 +19,6 @@ class EsolDbTest extends TestCase
      */
     public function testSqlSelectWithoutParameters()
     {
-        print "----------------------testSqlSelectWithoutParameters----------------------";
         $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testSansParametre.sql");
 
         $arrayData = $esolDb->getArrayData();
@@ -30,7 +29,6 @@ class EsolDbTest extends TestCase
 
     public function testSqlSelectWithParameters()
     {
-        print "----------------------testSqlSelectWithParameters----------------------";
         $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testAvecParametre.sql");
 
         $request = new Request();

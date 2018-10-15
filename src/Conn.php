@@ -20,7 +20,7 @@ class Conn
 {
     private $esolDbParams = null;
     private $environment = 'dev';
-    function __construct()
+    public function __construct()
     {
         $numargs = func_num_args();
         $arg_list = func_get_args();
@@ -53,11 +53,24 @@ class Conn
     {
         $dbConnection = '';
         try {
-            if ($this->esolDbParams->getDriver() == 'pdo_mysql') {
-                $dbConnection = $this->getDbConnMysqli();
+
+            if (strpos($this->esolDbParams->getDriver(), 'mysql')) {
+                if (in_array('mysqli', get_loaded_extensions())) {
+                    $dbConnection = $this->getDbConnMysqli();
+                } else if (in_array('pdo_mysql', get_loaded_extensions())) {
+                    print PHP_EOL . "you need to activate php extension mysqli" . PHP_EOL;
+                } else {
+                    print PHP_EOL . "you need to activate php extension mysqli" . PHP_EOL;
+                }
             }
-            if ($this->esolDbParams->getDriver() == 'pdo_pgsql') {
-                $dbConnection = $this->getDbConnPgsql();
+            if ($this->esolDbParams->getDriver() == 'pgsql') {
+                if (in_array('pgsql', get_loaded_extensions())) {
+                    $dbConnection = $this->getDbConnPgsql();
+                } else if (in_array('pdo_pgsql', get_loaded_extensions())) {
+                    print PHP_EOL . "you need to activate php extension pgsql" . PHP_EOL;
+                } else {
+                    print PHP_EOL . "you need to activate php extension pgsql" . PHP_EOL;
+                }
             }
         } catch (Exception $e) {
             die('Erreur : ' . $e->getMessage());
@@ -89,11 +102,15 @@ class Conn
 
     public function unsetDbConn()
     {
-        if ($this->esolDbParams->getDriver() == 'pdo_mysql') {
-            $this->getDbconn()->close();
+        if (strpos($this->esolDbParams->getDriver(), 'mysql')) {
+            if (in_array('mysqli', get_loaded_extensions())) {
+                $this->getDbconn()->close();
+            }
         }
-        if ($this->esolDbParams->getDriver() == 'pdo_pgsql') {
-            pg_close();
+        if ($this->esolDbParams->getDriver() == 'pgsql') {
+            if (in_array('pgsql', get_loaded_extensions())) {
+                pg_close();
+            }
         }
     }
 

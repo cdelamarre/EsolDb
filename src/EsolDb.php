@@ -15,7 +15,15 @@ class EsolDb
     private $sqlr;
     private $environment = 'dev';
 
-    function __construct()
+    /**
+     * __construct
+     * (@param null )
+     * (@param string dbToRequest)
+     * (@param string dbToRequest, @param string sqlFilePath )
+     * (@param string dbToRequest, @param string sqlFileDir, @param string sqlFileName )
+     * @return void
+     */
+    public function __construct()
     {
         $this->esolDbConn = new Conn();
 
@@ -44,10 +52,16 @@ class EsolDb
             $this->setDbToRequest($dbToRequest);
             $this->setSqlDirPath($sqlFilePath);
             $this->setSqlFileName($sqlFileName);
-            $this->setSqlFilePath();
         }
     }
 
+    /**
+     * setEnvironment
+     * permet de forcer l'environnement dev, prod ou test ce qui permettra d'aller chercjher le fichier de config esolDb.yml spécifique
+     * @param string 
+     *
+     * @return void
+     */
     public function setEnvironment($s)
     {
         $this->environment = $s;
@@ -55,22 +69,42 @@ class EsolDb
 
     }
 
+    /**
+     * setDbToRequest
+     * permet de spécifier la BDD configurée dans le fichier esolDb.yml que l'on souhaite interroger
+     * @param  string
+     *
+     * @return void
+     */
     public function setDbToRequest($s)
     {
         $this->esolDbConn->setDbToRequest($s);
     }
 
-    public function getDriver()
+    /**
+     * getDriver
+     *  retourne le parametre driver de la db interrogée
+     * @return string
+     */
+    private function getDriver()
     {
         $this->esolDbConn->getDriver();
     }
 
-    public function getArrayDataFromFileName($sqlFileName)
+    private function getArrayDataFromFileName($sqlFileName)
     {
         $this->setSqlFileName($sqlFileName);
         return $this->getArrayDataFromResult();
     }
 
+    /**
+     * getArrayData
+     * Retourne le result d'une requete sous forme d'un Array
+     * (@param null)
+     * (@param Symfony\Component\HttpFoundation\Request)
+     * 
+     * @return void
+     */
     public function getArrayData()
     {
 
@@ -86,6 +120,14 @@ class EsolDb
         return $this->getArrayDataFromSqlResult($sqlResult);
     }
 
+    /**
+     * execute
+     * execute une requete sql
+     * @param null execute la requete présent dans l'objet
+     * @param sqlr execute la requete transmise en paramètre
+     * 
+     * @return void
+     */
     public function execute()
     {
         $numargs = func_num_args();
@@ -101,6 +143,12 @@ class EsolDb
         return $msg;
     }
 
+    /**
+     * getPrintSqlr
+     * retourne la requete sqlr ( avec les key éventuellement transmises ) dans une version lisible 
+     *  
+     * @return string
+     */
     public function getPrintSqlr()
     {
 
@@ -113,6 +161,16 @@ class EsolDb
         return $sqlr;
     }
 
+    /**
+     * getArray
+     * retourne un tableau de resultat contenant des informations complémentaire
+     * sqlr : la requete interrogée
+     * recordsTotal : le nombre de lignes dans le résultat
+     * recorsFiltered : recordsTotal
+     * data : le tableau de résultat
+     * containers : data
+     * @return void
+     */
     public function getArray()
     {
         $arrayData = $this->getArrayData();
@@ -125,6 +183,12 @@ class EsolDb
         return $arrayRoot;
     }
 
+    /**
+     * getSqlr
+     * retourne la requete sqlr ( avec les key éventuellement transmises ) dans une version lisible 
+     *
+     * @return string
+     */
     public function getSqlr()
     {
         $valueToReturn = $this->getSqlrWithEsolDb();
@@ -132,7 +196,7 @@ class EsolDb
         return $valueToReturn;
     }
 
-    public function getSqlrWithEsolDb()
+    private function getSqlrWithEsolDb()
     {
         $esolDbSqlr = new Sqlr();
         $esolDbSqlr->setASqlrVars($this->getASqlrVars());
@@ -144,6 +208,13 @@ class EsolDb
         return $esolDbSqlr->getSqlr();
     }
 
+    /**
+     * setSqlr
+     * permet de paramétrer une requete à interroger
+     * @param  string
+     *
+     * @return void
+     */
     public function setSqlr($s)
     {
         $this->sqlr = $s;
@@ -151,11 +222,27 @@ class EsolDb
 
     private $aSqlrVars = array();
 
+    /**
+     * getASqlrVars
+     * Retourne l'objet des variables transmises à la requête
+     * 
+     * @return object
+     */
     public function getASqlrVars()
     {
         return $this->aSqlrVars;
     }
 
+    /**
+     * setASqlrVars
+     * permet de transmettre des variables à une requete contenant des {{key}} 
+     * ( @param array )
+     * ex : $esolDb->setASqlrVars($array);
+     * ( @param key, @param value )
+     * ex : $esolDb->setASqlrVars('key', 'value');
+     * 
+     * @return void
+     */
     public function setASqlrVars()
     {
         $numargs = func_num_args();
@@ -168,12 +255,12 @@ class EsolDb
         }
     }
 
-    public function setASqlrVarsKeyValue($key, $value)
+    private function setASqlrVarsKeyValue($key, $value)
     {
         $this->aSqlrVars[$key] = $value;
     }
 
-    public function getASqlrVarsKeyValue($key)
+    private function getASqlrVarsKeyValue($key)
     {
         $v = null;
         if (is_object($this->aSqlrVars)) {
@@ -185,33 +272,36 @@ class EsolDb
         return $v;
     }
 
-    public function setASqlrVarsFromRequestQuery($requestQuery)
+    private function setASqlrVarsFromRequestQuery($requestQuery)
     {
         $this->aSqlrVars = $requestQuery;
     }
 
-    public function getArrayDataFromSqlResult($sqlResult)
+    private function getArrayDataFromSqlResult($sqlResult)
     {
         if ($this->getASqlrVarsKeyValue("showSqlr")) {
             $sqlr = $this->getPrintSqlr();
             $sqlr = str_replace("\\", "", $sqlr);
         }
         $resultData = array();
-        if ($this->esolDbConn->getDriver() == 'pdo_mysql') {
-
-            $resultData = $this->getArrayDataFromMysqlResult($sqlResult);
-        }
-        if ($this->esolDbConn->getDriver() == 'pdo_pgsql') {
-            if ($this->getASqlrVarsKeyValue("showResultDetail")) {
-                print pg_affected_rows($sqlResult) . " lignes ont été affectées.\n";
-                print pg_num_rows($sqlResult) . " .\n";
+        if (strpos($this->esolDbConn->getDriver(), 'mysql')) {
+            if (in_array('mysqli', get_loaded_extensions())) {
+                $resultData = $this->getArrayDataFromMysqliResult($sqlResult);
             }
-            $resultData = $this->getArrayDataFromPgsqlResult($sqlResult);
+        }
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql')) {
+            if (in_array('pgsql', get_loaded_extensions())) {
+                if ($this->getASqlrVarsKeyValue("showResultDetail")) {
+                    print pg_affected_rows($sqlResult) . " lignes ont été affectées.\n";
+                    print pg_num_rows($sqlResult) . " .\n";
+                }
+                $resultData = $this->getArrayDataFromPgsqlResult($sqlResult);
+            }
         }
         return $resultData;
     }
 
-    public function getArrayDataFromMysqlResult($sqlResult)
+    private function getArrayDataFromMysqliResult($sqlResult)
     {
 
         $arrayData = array();
@@ -229,11 +319,8 @@ class EsolDb
         return $arrayData;
     }
 
-    public function getArrayDataFromPgsqlResult($sqlResult)
+    private function getArrayDataFromPgsqlResult($sqlResult)
     {
-
-
-
         $arrayData = array();
         while ($resultData = pg_fetch_object($sqlResult)) {
             $tmpData = array();
@@ -259,28 +346,36 @@ class EsolDb
     private $sqlFileName;
     private $sqlFilePath;
 
-    public function getSqlDirPath()
+    private function getSqlDirPath()
     {
         return $this->sqlDirPath;
     }
 
-    public function setSqlDirPath($sqlDirPath)
+    private function setSqlDirPath($sqlDirPath)
     {
         $this->sqlDirPath = $sqlDirPath;
     }
 
-    public function getSqlFileName()
+    private function getSqlFileName()
     {
         return $this->sqlFileName;
     }
 
+    /**
+     * setSqlFileName
+     * permet de transmettre le nom d'un fichier sql à executer
+     * 
+     * @param string
+     *
+     * @return void
+     */
     public function setSqlFileName($sqlFileName)
     {
         $this->sqlFileName = $sqlFileName;
         $this->setSqlFilePath();
     }
 
-    public function setSqlFilePath()
+    private function setSqlFilePath()
     {
         $numargs = func_num_args();
         $arg_list = func_get_args();
@@ -299,7 +394,7 @@ class EsolDb
         }
     }
 
-    public function getSqlFilePath()
+    private function getSqlFilePath()
     {
         $sqlFilePath = $this->sqlFilePath;
         if ($sqlFilePath == null) {
@@ -310,21 +405,27 @@ class EsolDb
         return $sqlFilePath;
     }
 
-    public function getResultFromSqlr($sqlr)
+    private function getResultFromSqlr($sqlr)
     {
         $this->esolDbConn->setDbConn();
         $result = null;
-        if ($this->esolDbConn->getDriver() == 'pdo_mysql') {
-            $result = $this->getResultFromSqlrMysqli($sqlr);
+
+
+        if (strpos($this->esolDbConn->getDriver(), 'mysql')) {
+            if (in_array('mysqli', get_loaded_extensions())) {
+                $result = $this->getResultFromSqlrMysqli($sqlr);
+            }
         }
-        if ($this->esolDbConn->getDriver() == 'pdo_pgsql') {
-            $result = $this->getResultFromSqlrPgsql($sqlr);
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql')) {
+            if (in_array('pgsql', get_loaded_extensions())) {
+                $result = $this->getResultFromSqlrPgsql($sqlr);
+            }
         }
         $this->esolDbConn->unsetDbConn();
         return $result;
     }
 
-    public function getResultFromSqlrMysqli($sqlr)
+    private function getResultFromSqlrMysqli($sqlr)
     {
         $result = mysqli_query($this->esolDbConn->getDbConn(), $sqlr);
         if ($this->esolDbConn->getDbConn()->error) {
@@ -333,7 +434,7 @@ class EsolDb
         return $result;
     }
 
-    public function getResultFromSqlrPgsql($sqlr)
+    private function getResultFromSqlrPgsql($sqlr)
     {
         $result = null;
         try {

@@ -66,7 +66,7 @@ class Params
     public function getAMysqlDemo()
     {
         $aParams = array(
-            'driver' => 'pdo_mysql',
+            'driver' => 'mysql',
             'host' => 'db4free.net',
             'port' => '3306',
             'name' => 'esoldb',
@@ -84,7 +84,7 @@ class Params
     public function getAPgsqlDemo()
     {
         $aParams = array(
-            'driver' => 'pdo_pgsql',
+            'driver' => 'pgsql',
             'host' => 'db4free.net',
             'port' => '3306',
             'name' => 'esoldb',

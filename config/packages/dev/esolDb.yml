@@ -1,13 +1,13 @@
 parameters:
     pgsql_test:
-        driver: pdo_pgsql
+        driver: pgsql
         host: db4free.net
         port: '3306'
         name: esoldb
         user: esoldb
         password: 4GwpEudP47s5qGD
     mysql_test:
-        driver: pdo_mysql
+        driver: mysql
         host: db4free.net
         port: '3306'
         name: esoldb
