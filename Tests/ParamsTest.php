@@ -1,46 +1,50 @@
 <?php
 
 // ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/ParamsTest
-declare(strict_types=1);
+declare (strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
+use \Esol\Sy\Tools\Tools as SyTools;
+
 
 
 class ParamsTest extends TestCase
 {
 
 
-    public function testInitEsolDbYml()
+    public function atestEnvironnement()
+    {
+        $kernelNameClass = $this->getKernelClass(); // Récupération du nom de la classe Kernel
+        $kernel = new $kernelNameClass('test', true); // Instanciation de la classe dans un environnement de test avec débogage
+        $kernel->boot(); // On boote le kernel (comme un pc)
+        $this->em = $kernel->getContainer()->get('MonSvc');
+//        print $this->environment.self::CONFIG_EXTS."]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]";
+    }
+
+    public function atestInitEsolDbYml()
     {
 
-        $kernelNameClass = $this->getKernelClass(); // Récupération du nom de la classe Kernel
-$kernel = new $kernelNameClass('test', true); // Instanciation de la classe dans un environnement de test avec débogage
-$kernel->boot(); // On boote le kernel (comme un pc)
-$this->em = $kernel->getContainer()->get('MonSvc');
-
-//        print $this->environment.self::CONFIG_EXTS."]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]";
-
         $o = new \Esol\Db\Params("mysql_test");
-    
-        $configDir = __DIR__.'/../app/config/packages/tests/';
-        $fileToTest = $configDir."esolDb.yml";
         $o->initEsolDbYml();
 
-        $this->assertTrue(file_exists($fileToTest), "File ".$fileToTest." does not exist");
+        $configDir = __DIR__ . '/../app/config/packages/tests/';
+        $fileToTest = $configDir . "esolDb.yml";
+
+        $this->assertTrue(file_exists($fileToTest), "File " . $fileToTest . " does not exist");
     }
 
-    public function testIsConfigEsolDbExist()
+    public function atestIsConfigEsolDbExist()
     {
-        $configDirectories = __DIR__.'/../config/packages/prod/';
-        $fileToTest = $configDirectories."esolDb.yml";
+        $configDirectories = __DIR__ . '/../config/packages/prod/';
+        $fileToTest = $configDirectories . "esolDb.yml";
 
-        $this->assertTrue(file_exists($fileToTest), "File ".$fileToTest." does not exist");
+        $this->assertTrue(file_exists($fileToTest), "File " . $fileToTest . " does not exist");
     }
 
-    public function testIsConfigEsolDbComplete()
+
+    public function atestIsConfigEsolDbComplete()
     {
         $o = new \Esol\Db\Params("mysql_test");
-        $o->initParams();
         $this->assertNotEmpty($o->getDriver(), "Driver is Empty");
         $this->assertNotEmpty($o->getServerHost(), "Host is Empty");
         $this->assertNotEmpty($o->getServerPort(), "Port is Empty");
@@ -50,5 +54,27 @@ $this->em = $kernel->getContainer()->get('MonSvc');
 
     }
 
+    public function testAutoBuildEsolDbYml()
+    {
+
+        $syTools = new SyTools();
+        $projectDir = $syTools->getProjectDir();
+        $configDir = $projectDir . '/config/packages/';
+
+        try {
+            unlink($configDir . "dev/" . "/esolDb.yml");
+            unlink($configDir . "prod/" . "/esolDb.yml");
+            unlink($configDir . "test/" . "/esolDb.yml");
+        } catch (\Exception $e) {
+            print $e;
+        }
+
+        \Esol\Db\InitEsolDbConfigFile::initEsolDbConfigFile();
+
+        $fileToTest = $configDir . "dev" . "/esolDb.yml";
+
+        $this->assertTrue(file_exists($fileToTest), "File " . $fileToTest . " does not exist");
+
+    }
 
 }

@@ -20,6 +20,12 @@ class Params
 
     private $environment = 'prod';
 
+    /**
+     * Params
+     * (@param string dbToRequest)
+     * (@param string dbToRequest, @param string environment [dev, prod, test] )
+     * @return void
+     */
     function __construct()
     {
         $numargs = func_num_args();
@@ -28,7 +34,7 @@ class Params
             $dbToRequest = $arg_list[0];
             $this->setDbToRequest($dbToRequest);
         }
-        if ($numargs == 2) {
+        if ($numargs > 2) {
             $this->$environment = $arg_list[1];
         }
 
@@ -39,77 +45,14 @@ class Params
         $this->environment = $s;
     }
 
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
     public function IsConfigEsolDbExist()
     {
         return true;
-    }
-
-    /**
-     * mkConfDir
-     * fabrique le répertoire de configuration
-     * @param  string $confDirPath
-     *
-     * @return void
-     */
-    public function mkConfDir($confDirPath)
-    {
-        mkdir($confDirPath, 0777, true);
-    }
-
-
-    /**
-     * getAMysqlDemo
-     * retourne un tableau contenant les paramètres de connexion à la base de test mysql
-     *
-     * @return array
-     */
-    public function getAMysqlDemo()
-    {
-        $aParams = array(
-            'driver' => 'mysql',
-            'host' => 'db4free.net',
-            'port' => '3306',
-            'name' => 'esoldb',
-            'user' => 'esoldb',
-            'password' => '4GwpEudP47s5qGD'
-        );
-        return $aParams;
-    }
-
-    /**
-     * getAPgsqlDemo
-     * retourne un tableau contenant les paramètres de connexion à la base de test postgresql
-     * @return array
-     */
-    public function getAPgsqlDemo()
-    {
-        $aParams = array(
-            'driver' => 'pgsql',
-            'host' => 'db4free.net',
-            'port' => '3306',
-            'name' => 'esoldb',
-            'user' => 'esoldb',
-            'password' => '4GwpEudP47s5qGD'
-        );
-        return $aParams;
-    }
-
-    public function initEsolDbYml($whichConfDir)
-    {
-
-        $syTools = new SyTools();
-        $projectDir = $syTools->getProjectDir();
-        $configDir = $projectDir . '/config/packages/';
-
-        $aDb = array(
-            'pgsql_test' => $this->getAPgsqlDemo(),
-            'mysql_test' => $this->getAMysqlDemo()
-        );
-        $aRoot = array(
-            'parameters' => $aDb
-        );
-        $yaml = Yaml::dump($aRoot, 10);
-        file_put_contents($configDir . $whichConfDir . '/esolDb.yml', $yaml);
     }
 
 
@@ -144,12 +87,8 @@ class Params
 
         $this->renameConfDirTestsToTestIfNecessary();
 
-
         $configDir .= $this->environment . '/';
 
-        if (!file_exists($configDir) && !is_dir($configDir)) {
-            $this->mkConfDir($configDir);
-        }
         return $configDir;
     }
 
@@ -160,19 +99,7 @@ class Params
      */
     public function getEsolDbConfigFilePath()
     {
-        $syTools = new SyTools();
-        $projectDir = $syTools->getProjectDir();
-        $configDir = $projectDir . '/config/packages/';
-        
-        if (!file_exists($configDir . 'prod' . '/esolDb.yml')) {
-            $this->initEsolDbYml('prod');
-        }
-        if (!file_exists($configDir . 'dev' . '/esolDb.yml')) {
-            $this->initEsolDbYml('dev');
-        }
-        if (!file_exists($configDir . 'test' . '/esolDb.yml')) {
-            $this->initEsolDbYml('test');
-        }
+//        $this->initEsolDbConfigFilePath();
         return $this->getConfDir() . 'esolDb.yml';
     }
 
@@ -182,7 +109,7 @@ class Params
         $esolDbConfigFilePath = $this->getEsolDbConfigFilePath();
 
         $a = Yaml::parseFile($this->getEsolDbConfigFilePath());
-        $o = (object)$a['parameters'][$this->getDbToRequest()];
+        $o = (object) $a['parameters'][$this->getDbToRequest()];
 
         $this->setDriver($o->driver);
         $this->setServerHost($o->host);

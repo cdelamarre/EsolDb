@@ -29,9 +29,15 @@
     },
 
     "scripts": {
-        "test": [
-            "Esol\\Test\\Test::printTest2",
-            "MyVendor\\MyClass\\MyClass::test"
+        "autoBuildEsolDbYml": [
+            "Esol\\Db\\InitEsolDbConfigFile::initEsolDbConfigFile"
+        ],
+        "post-install-cmd": [
+            "@autoBuildEsolDbYml"
+        ],
+        "post-update-cmd": [
+            "@autoBuildEsolDbYml"
         ]
+
     }
 }
