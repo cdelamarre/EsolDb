@@ -9,6 +9,19 @@ Cette librairie permet d'intérroge des bases de données POSTGRESQL ou MYSQL:
 composer require esol/db
 ```
 
+In Esol/Db composer.json, add script "Esol\\Db\\EsolDbConfigFile::initEsolDbConfigFile" in post-package-install & post-package-update event.
+
+```
+"scripts": {
+    "post-package-install": [
+         "Esol\\Db\\EsolDbConfigFile::initEsolDbConfigFile"
+    ],
+    "post-package-update": [
+         "Esol\\Db\\EsolDbConfigFile::initEsolDbConfigFile"
+    ]
+}
+```
+
 ## Extensions php à activer dans php.ini
 
 Esol/Db utilise les extensions mysqli et/ou pgsql
