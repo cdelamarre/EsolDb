@@ -77,12 +77,11 @@ class EsolDb
         if (func_num_args() == 1) {
             $arg1 = func_get_args()[0];
             if (get_class($arg1) == 'Symfony\Component\HttpFoundation\Request') {
-                var_dump($arg1->query);
+//                var_dump($arg1->query);
                 $this->setASqlrVars($arg1->query);
             }
 
         }
-
         $sqlResult = $this->getResultFromSqlr($this->getSqlr());
         return $this->getArrayDataFromSqlResult($sqlResult);
     }

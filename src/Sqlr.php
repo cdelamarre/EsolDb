@@ -86,7 +86,7 @@ class Sqlr
             $sqlr = str_replace('[[' . $key . ']]', $value, $sqlr);
             $sqlr = str_replace('{{' . $key . '}}', $value, $sqlr);
         }
-
+        $sqlr = $this->removeUnknownKey($sqlr);
         $this->setSqlr($sqlr);
     }
 
