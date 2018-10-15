@@ -32,12 +32,25 @@
         "autoBuildEsolDbYml": [
             "Esol\\Db\\InitEsolDbConfigFile::initEsolDbConfigFile"
         ],
+        "autoRemoveEsolDbYml": [
+            "Esol\\Db\\InitEsolDbConfigFile::unlinkEsolDbConfigFile"
+        ],
         "post-install-cmd": [
             "@autoBuildEsolDbYml"
         ],
         "post-update-cmd": [
             "@autoBuildEsolDbYml"
+        ],
+        "post-package-install": [
+            "@autoBuildEsolDbYml"
+        ],
+        "post-package-update": [
+            "@autoBuildEsolDbYml"
+        ],
+        "post-package-uninstall": [
+            "@autoRemoveEsolDbYml"
         ]
 
     }
+
 }

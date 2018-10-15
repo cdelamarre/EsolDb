@@ -69,7 +69,8 @@ class ParamsTest extends TestCase
             print $e;
         }
 
-        \Esol\Db\InitEsolDbConfigFile::initEsolDbConfigFile();
+        \Esol\Db\EsolDbConfigFile::unlinkEsolDbConfigFile();
+        \Esol\Db\EsolDbConfigFile::initEsolDbConfigFile();
 
         $fileToTest = $configDir . "dev" . "/esolDb.yml";
 
