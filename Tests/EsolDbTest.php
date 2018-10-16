@@ -20,7 +20,6 @@ class EsolDbTest extends TestCase
     public function testSqlSelectWithoutParameters()
     {
         $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testSansParametre.sql");
-
         $arrayData = $esolDb->getArrayData();
 
         $this->assertNotCount(0, $arrayData);
