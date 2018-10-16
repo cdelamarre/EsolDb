@@ -54,7 +54,7 @@ class Conn
         $dbConnection = '';
         try {
 
-            if (strpos($this->esolDbParams->getDriver(), 'mysql')) {
+            if (strpos($this->esolDbParams->getDriver(), 'mysql')>-1) {
                 if (in_array('mysqli', get_loaded_extensions())) {
                     $dbConnection = $this->getDbConnMysqli();
                 } else if (in_array('pdo_mysql', get_loaded_extensions())) {
@@ -63,7 +63,7 @@ class Conn
                     print PHP_EOL . "you need to activate php extension mysqli" . PHP_EOL;
                 }
             }
-            if ($this->esolDbParams->getDriver() == 'pgsql') {
+            if (strpos($this->esolDbParams->getDriver(), 'pgsql')>-1) {
                 if (in_array('pgsql', get_loaded_extensions())) {
                     $dbConnection = $this->getDbConnPgsql();
                 } else if (in_array('pdo_pgsql', get_loaded_extensions())) {
@@ -102,12 +102,12 @@ class Conn
 
     public function unsetDbConn()
     {
-        if (strpos($this->esolDbParams->getDriver(), 'mysql')) {
+        if (strpos($this->esolDbParams->getDriver(), 'mysql')>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $this->getDbconn()->close();
             }
         }
-        if ($this->esolDbParams->getDriver() == 'pgsql') {
+        if (strpos($this->esolDbParams->getDriver(), 'pgsql')>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 pg_close();
             }

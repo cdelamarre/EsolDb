@@ -102,6 +102,7 @@ class EsolDb
      * Retourne le result d'une requete sous forme d'un Array
      * (@param null)
      * (@param Symfony\Component\HttpFoundation\Request)
+     * (@param array)
      * 
      * @return void
      */
@@ -110,11 +111,7 @@ class EsolDb
 
         if (func_num_args() == 1) {
             $arg1 = func_get_args()[0];
-            if (get_class($arg1) == 'Symfony\Component\HttpFoundation\Request') {
-//                var_dump($arg1->query);
-                $this->setASqlrVars($arg1->query);
-            }
-
+            $this->setASqlrVars($arg1);
         }
         $sqlResult = $this->getResultFromSqlr($this->getSqlr());
         return $this->getArrayDataFromSqlResult($sqlResult);
@@ -248,7 +245,23 @@ class EsolDb
         $numargs = func_num_args();
         $arg_list = func_get_args();
         if ($numargs == 1) {
-            $this->setASqlrVarsFromRequestQuery($arg_list[0]);
+            $arg = $arg_list[0];
+            try {
+                if (get_class($arg) == 'Symfony\Component\HttpFoundation\Request') {
+                    $this->setASqlrVarsFromRequestQuery($arg->query);
+                }
+            } catch (\Exception $e) {
+                print $e . PHP_EOL;
+            }
+
+            try {
+                if (gettype($arg) == 'array') {
+                    $this->setASqlrVarsFromArray($arg);
+                }
+            } catch (\Exception $e) {
+                print $e . PHP_EOL;
+
+            }
         }
         if ($numargs == 2) {
             $this->setASqlrVarsKeyValue($arg_list[0], $arg_list[1]);
@@ -258,6 +271,12 @@ class EsolDb
     private function setASqlrVarsKeyValue($key, $value)
     {
         $this->aSqlrVars[$key] = $value;
+    }
+    private function setASqlrVarsFromArray($array)
+    {
+        foreach ($array as $key => $value) {
+            $this->setASqlrVarsKeyValue($key, $value);
+        }
     }
 
     private function getASqlrVarsKeyValue($key)
@@ -284,15 +303,15 @@ class EsolDb
             $sqlr = str_replace("\\", "", $sqlr);
         }
         $resultData = array();
-        if (strpos($this->esolDbConn->getDriver(), 'mysql')) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql')>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $resultData = $this->getArrayDataFromMysqliResult($sqlResult);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql')) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql')>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 if ($this->getASqlrVarsKeyValue("showResultDetail")) {
-                    print pg_affected_rows($sqlResult) . " lignes ont été affectées.\n";
+                    print pg_affected_rows($sqlResult) . "  lignes ont été affectées.\n";
                     print pg_num_rows($sqlResult) . " .\n";
                 }
                 $resultData = $this->getArrayDataFromPgsqlResult($sqlResult);
@@ -405,18 +424,17 @@ class EsolDb
         return $sqlFilePath;
     }
 
-    private function getResultFromSqlr($sqlr)
+    public function getResultFromSqlr($sqlr)
     {
         $this->esolDbConn->setDbConn();
         $result = null;
 
-
-        if (strpos($this->esolDbConn->getDriver(), 'mysql')) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql')>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrMysqli($sqlr);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql')) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql')>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrPgsql($sqlr);
             }

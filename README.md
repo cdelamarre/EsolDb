@@ -48,15 +48,15 @@ Dans le répertoire ./Resources/sql/ il faudra placer les fichiers sql que l'on 
 
 ### SELECT
 
-````
+```
 $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/select.sql");
 $arrayData = $esolDb->getArrayData();
-````
+```
 ### INSERT, UPDATE, DELETE
-````
+```
 $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/insert.sql");
 $esolDb->execute();
-````
+```
 
 ### Passage de paramètres dans les instructions SQL
 ESOL/DB remplacera toutes les instructions présentent dans le SQL entre {}
@@ -64,19 +64,45 @@ ESOL/DB remplacera toutes les instructions présentent dans le SQL entre {}
 On peut passer des paramètres  : 
 
 - En utilisant Symfony\Component\HttpFoundation\Request
-````    
+        
+```
 $request = new Request();
 $request->query->set("ORDER_BY", "name");
-
 $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/select.sql");
+```
+
+```
 $esolDb->setASqlrVars($request);
-````
+$arrayData = $esolDb->getArrayData();
+```
+OU en passant directement le Request à getArrayData
+```
+$arrayData = $esolDb->getArrayData($request);
+```
+
+- En utilisant une table de clé
+```    
+$array = array(
+    "value1" => "BMOPQ", 
+    "value2" => "JRYOM"
+);
+$esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/select.sql");
+```
+$esolDb->setASqlrVars($array);
+$arrayData = $esolDb->getArrayData();
+```
+OU directement en passant le tableau en paramètre de getArrayData
+```
+$arrayData = $esolDb->getArrayData($array);
+```
+
 
 - En utilisant la fonction publique setASqlrVars passant paramètre par paramètre 
-````
+```
 $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/select.sql");
 $esolDb->setASqlrVars('numPo', $rowData['id_po']);
-````
+$arrayData = $esolDb->getArrayData();
+```
 
 ### récupérer la requète SQL au format String
 $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/select.sql");

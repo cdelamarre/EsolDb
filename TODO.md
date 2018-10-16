@@ -14,4 +14,5 @@
     ~~Esol.db.php~~
     Params.php
     Sqlr.php
-7° gérer les environnements dev, prod, test
+7° gérer les environnements dev, prod, 
+~~8° ajouter la possibilité de passer en paramètre un tableau de clé ~~
