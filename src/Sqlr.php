@@ -80,8 +80,18 @@ class Sqlr
     {
         $sqlr = $this->getReplaceMultilineCommentsFromSinglLine($sqlr);
         foreach ($this->getASqlrVars() as $key => $value) {
+            try {
+                if (gettype($value) == 'array') {
+                    $value = implode("','", $value);
+
+                    dump($value);
+                }
+            } catch (\Exception $e) {
+            }
             $value = addslashes($value);
             $value = utf8_encode($value);
+
+
             $value = str_replace("\\", "", $value);  // CD20180908 on enleve les \ car si on passe des critères avec des ' comme on peut en avoir dans les critère IN ca plante
             $sqlr = str_replace('[[' . $key . ']]', $value, $sqlr);
             $sqlr = str_replace('{{' . $key . '}}', $value, $sqlr);
