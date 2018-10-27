@@ -251,7 +251,7 @@ class EsolDb
                     $this->setASqlrVarsFromRequestQuery($arg->query);
                 }
             } catch (\Exception $e) {
-                print $e . PHP_EOL;
+//                print $e . PHP_EOL;
             }
 
             try {
@@ -259,7 +259,7 @@ class EsolDb
                     $this->setASqlrVarsFromArray($arg);
                 }
             } catch (\Exception $e) {
-                print $e . PHP_EOL;
+//                print $e . PHP_EOL;
 
             }
         }
