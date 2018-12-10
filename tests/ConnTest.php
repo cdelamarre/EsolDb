@@ -11,7 +11,7 @@ class ConnTest extends TestCase
 
     public function testIsConfigEsolDbComplete()
     {
-        $o = new \Esol\Db\Conn("mysql_test");
+        $o = new \Esol\Db\Conn("mysqlTest");
         var_dump($o->getDbConn());
         $this->assertTrue(true);
     }
@@ -21,7 +21,7 @@ class ConnTest extends TestCase
         $aPhpExtensions = get_loaded_extensions();
         var_dump($aPhpExtensions);
         $isExtensionEnabled = in_array('pdo_pgsql', $aPhpExtensions);
-        $o = new \Esol\Db\Conn("mysql_test");
+        $o = new \Esol\Db\Conn("mysqlTest");
         var_dump($o->getDbConn());
         $this->assertTrue($isExtensionEnabled);
     }

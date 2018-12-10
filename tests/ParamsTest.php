@@ -24,7 +24,7 @@ class ParamsTest extends TestCase
     public function atestInitEsolDbYml()
     {
 
-        $o = new \Esol\Db\Params("mysql_test");
+        $o = new \Esol\Db\Params("mysqlTest");
         $o->initEsolDbYml();
 
         $configDir = __DIR__ . '/../app/config/packages/tests/';
@@ -44,7 +44,7 @@ class ParamsTest extends TestCase
 
     public function atestIsConfigEsolDbComplete()
     {
-        $o = new \Esol\Db\Params("mysql_test");
+        $o = new \Esol\Db\Params("mysqlTest");
         $this->assertNotEmpty($o->getDriver(), "Driver is Empty");
         $this->assertNotEmpty($o->getServerHost(), "Host is Empty");
         $this->assertNotEmpty($o->getServerPort(), "Port is Empty");

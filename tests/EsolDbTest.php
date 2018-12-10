@@ -19,7 +19,7 @@ class EsolDbTest extends TestCase
      */
     public function atestSqlSelectWithoutParameters()
     {
-        $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testSansParametre.sql");
+        $esolDb = new \Esol\Db\EsolDb("mysqlTest", "./Resources/sql/testSansParametre.sql");
         $arrayData = $esolDb->getArrayData();
 
         var_dump($arrayData);
@@ -30,7 +30,7 @@ class EsolDbTest extends TestCase
 
     public function atestSqlSelectWithParameters()
     {
-        $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testAvecParametre.sql");
+        $esolDb = new \Esol\Db\EsolDb("mysqlTest", "./Resources/sql/testAvecParametre.sql");
 
         $request = new Request();
         $request->query->set("value", "UKRZO");
@@ -45,7 +45,7 @@ class EsolDbTest extends TestCase
 
     public function testSqlSelectWithParameterArray()
     {
-        $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/testAvecParametre.sql");
+        $esolDb = new \Esol\Db\EsolDb("mysqlTest", "./Resources/sql/testAvecParametre.sql");
 
         $array = array(
             "value1" => "BMOPQ", 
@@ -70,7 +70,7 @@ class EsolDbTest extends TestCase
 
         $random_string = chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)); // random(ish) 5 character string
 
-        $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/insert.sql");
+        $esolDb = new \Esol\Db\EsolDb("mysqlTest", "./Resources/sql/insert.sql");
         $esolDb->setASqlrVars('value', $random_string);
         print $esolDb->getsqlr();
         $result = $esolDb->execute();
@@ -84,7 +84,7 @@ print $result;
     {
         $random_string = chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)); // random(ish) 5 character string
 
-        $esolDb = new \Esol\Db\EsolDb("mysql_test", "./Resources/sql/insert.sql");
+        $esolDb = new \Esol\Db\EsolDb("mysqlTest", "./Resources/sql/insert.sql");
         $esolDb->setASqlrVars('value', $random_string);
 
 //        $sqlr = $esolDb->getSqlr();

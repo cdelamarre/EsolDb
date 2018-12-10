@@ -1,4 +1,4 @@
-Cette librairie permet d'intérroge des bases de données POSTGRESQL ou MYSQL: 
+Cette librairie permet d'interroger des bases de données POSTGRESQL ou MYSQL: 
 - de recuperer un array à partir d'une requete SELECT
 - d'executer un INSERT, UPDATE, DELETE ou toute autre instruction SQL ne nécessitant pas de retour.
 
@@ -40,6 +40,33 @@ extension=php_pgsql.dll
 ## Configuration
 
 Dans le fichier {project_dir}/config/packages/prod/esolDb.yml on trouve les paramètres vers la base de donnée dans laquelle on veut agir
+
+La configuration s'inscrit dans un format YAML sous la forme :
+
+```parameters:
+    pgsqlTest:
+        driver: pgsql
+        host: db4free.net
+        port: '5432'
+        name: esoldb
+        user: esoldb
+        password: 4GwpEudP47s5qGD
+```
+
+
+
+##V3.4.30 Prise en compte du .env à la racine du projet sous la forme
+Chaque nom de variable d'environnement doit être sous la forme
+esolDb_*nomDeLaBase*_*nomDuParam*
+ex :
+
+```esolDb_pgsqlTestDb_driver=pgsql
+esolDb_pgsqlTestDb_host=db4free.net
+esolDb_pgsqlTestDb_port='5432'
+esolDb_pgsqlTestDb_name=esoldb
+esolDb_pgsqlTestDb_user=esoldb
+esolDb_pgsqlTestDb_password=4GwpEudP47s5qGD
+```
 
 ## Fichiers de requetes
 Dans le répertoire ./Resources/sql/ il faudra placer les fichiers sql que l'on souhaite executer.
