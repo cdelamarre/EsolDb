@@ -84,7 +84,6 @@ class Sqlr
                 if (gettype($value) == 'array') {
                     $value = implode("','", $value);
 
-                    dump($value);
                 }
             } catch (\Exception $e) {
             }
