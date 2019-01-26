@@ -43,7 +43,8 @@ Dans le fichier {project_dir}/config/packages/prod/esolDb.yml on trouve les para
 
 La configuration s'inscrit dans un format YAML sous la forme :
 
-```parameters:
+```
+parameters:
     pgsqlTest:
         driver: pgsql
         host: db4free.net
@@ -60,7 +61,8 @@ Chaque nom de variable d'environnement doit être sous la forme
 esolDb_*nomDeLaBase*_*nomDuParam*
 ex :
 
-```esolDb_pgsqlTestDb_driver=pgsql
+```
+esolDb_pgsqlTestDb_driver=pgsql
 esolDb_pgsqlTestDb_host=db4free.net
 esolDb_pgsqlTestDb_port='5432'
 esolDb_pgsqlTestDb_name=esoldb
