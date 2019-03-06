@@ -104,7 +104,7 @@ class EsolDb
      * (@param Symfony\Component\HttpFoundation\Request)
      * (@param array)
      * 
-     * @return void
+     * @return array
      */
     public function getArrayData()
     {
