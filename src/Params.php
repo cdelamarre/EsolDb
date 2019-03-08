@@ -46,7 +46,7 @@ class Params
 
     /**
      * mkConfDir
-     * fabrique le répertoire de configuration
+     * fabrique le r?pertoire de configuration
      * @param  string $confDirPath
      *
      * @return void
@@ -59,7 +59,7 @@ class Params
 
     /**
      * getAMysqlDemo
-     * retourne un tableau contenant les paramètres de connexion à la base de test mysql
+     * retourne un tableau contenant les param?tres de connexion ? la base de test mysql
      *
      * @return array
      */
@@ -78,7 +78,7 @@ class Params
 
     /**
      * getAPgsqlDemo
-     * retourne un tableau contenant les paramètres de connexion à la base de test postgresql
+     * retourne un tableau contenant les param?tres de connexion ? la base de test postgresql
      * @return array
      */
     public function getAPgsqlDemo()
@@ -115,7 +115,7 @@ class Params
 
     /**
      * renameConfDirTestsToTestIfNecessary
-     * Dans une précédente version le répertoire config/packages/test a été nommé avec erreur config/packages/tests
+     * Dans une pr?c?dente version le r?pertoire config/packages/test a ?t? nomm? avec erreur config/packages/tests
      * Cette fonction vient corriger cette erreur.
      * 
      * @return void
@@ -132,7 +132,7 @@ class Params
 
     /**
      * getConfDir
-     * Cette fonction récupère le chemin du répertoire de configuration
+     * Cette fonction r?cup?re le chemin du r?pertoire de configuration
      * @return string
      */
     public function getConfDir()
@@ -187,10 +187,13 @@ class Params
     {
 
         if ($this->getEsolDbEnv("driver") != '') {
+            dump("setParamsFromEnv");
             $this->setParamsFromEnv();
         } else if (file_exists(__DIR__ .'/../.env')) {
+            dump("setParamsFromRootDotEnv");
             $this->setParamsFromRootDotEnv();
         } else {
+            dump("setParamsFromPackageYml");
             $this->setParamsFromPackageYml();
         }
     }
@@ -198,16 +201,7 @@ class Params
 
     private function setParamsFromRootDotEnv()
     {
-        $syTools = new SyTools();
-
-        $lines = file($syTools->getRootDir() . '/.env');
-        /*On parcourt le tableau $lines et on affiche le contenu de chaque ligne précédée de son numéro*/
-        foreach ($lines as $lineNumber => $lineContent)
-        {
-            if(substr($lineContent, 0, 1) != "#" && strpos($lineContent, "=")>0){
-                putenv($lineContent);
-            }
-        }
+        (new SyTools())->LoadDotEnv();
         $this->setParamsFromEnv();
     }
 
