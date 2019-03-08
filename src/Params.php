@@ -185,19 +185,14 @@ class Params
 
     public function initParams()
     {
-
         if ($this->getEsolDbEnv("driver") != '') {
-            dump("setParamsFromEnv");
             $this->setParamsFromEnv();
-        } else if (file_exists(__DIR__ .'/../.env')) {
-            dump("setParamsFromRootDotEnv");
+        } else if (file_exists((new SyTools())->getRootDir() . '/.env')) {
             $this->setParamsFromRootDotEnv();
         } else {
-            dump("setParamsFromPackageYml");
             $this->setParamsFromPackageYml();
         }
     }
-
 
     private function setParamsFromRootDotEnv()
     {
