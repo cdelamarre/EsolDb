@@ -10,6 +10,7 @@ namespace Esol\Db;
 
 use Symfony\Component\Yaml\Yaml;
 use \Esol\Sy\Tools\Tools as SyTools;
+
 /**
  * Description of EsolObject
  *
@@ -31,7 +32,6 @@ class Params
         if ($numargs == 2) {
             $this->$environment = $arg_list[1];
         }
-
     }
 
     public function setEnvironment($s)
@@ -46,7 +46,7 @@ class Params
 
     /**
      * mkConfDir
-     * fabrique le rÃ©pertoire de configuration
+     * fabrique le répertoire de configuration
      * @param  string $confDirPath
      *
      * @return void
@@ -59,7 +59,7 @@ class Params
 
     /**
      * getAMysqlDemo
-     * retourne un tableau contenant les paramÃ¨tres de connexion Ã  la base de test mysql
+     * retourne un tableau contenant les paramètres de connexion à la base de test mysql
      *
      * @return array
      */
@@ -78,7 +78,7 @@ class Params
 
     /**
      * getAPgsqlDemo
-     * retourne un tableau contenant les paramÃ¨tres de connexion Ã  la base de test postgresql
+     * retourne un tableau contenant les paramètres de connexion à la base de test postgresql
      * @return array
      */
     public function getAPgsqlDemo()
@@ -115,7 +115,7 @@ class Params
 
     /**
      * renameConfDirTestsToTestIfNecessary
-     * Dans une prÃ©cÃ©dente version le rÃ©pertoire config/packages/test a Ã©tÃ© nommÃ© avec erreur config/packages/tests
+     * Dans une précédente version le répertoire config/packages/test a été nommé avec erreur config/packages/tests
      * Cette fonction vient corriger cette erreur.
      * 
      * @return void
@@ -132,7 +132,7 @@ class Params
 
     /**
      * getConfDir
-     * Cette fonction rÃ©cupÃ¨re le chemin du rÃ©pertoire de configuration
+     * Cette fonction récupère le chemin du répertoire de configuration
      * @return string
      */
     public function getConfDir()
@@ -188,11 +188,27 @@ class Params
 
         if ($this->getEsolDbEnv("driver") != '') {
             $this->setParamsFromEnv();
+        } else if (file_exists(__DIR__ .'/../.env')) {
+            $this->setParamsFromRootDotEnv();
         } else {
             $this->setParamsFromPackageYml();
         }
+    }
 
 
+    private function setParamsFromRootDotEnv()
+    {
+        $syTools = new SyTools();
+
+        $lines = file($syTools->getRootDir() . '/.env');
+        /*On parcourt le tableau $lines et on affiche le contenu de chaque ligne précédée de son numéro*/
+        foreach ($lines as $lineNumber => $lineContent)
+        {
+            if(substr($lineContent, 0, 1) != "#" && strpos($lineContent, "=")>0){
+                putenv($lineContent);
+            }
+        }
+        $this->setParamsFromEnv();
     }
 
 
@@ -312,7 +328,4 @@ class Params
     {
         $this->userName = $userName;
     }
-
-
-
 }
