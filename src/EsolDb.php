@@ -314,12 +314,12 @@ class EsolDb
             $sqlr = str_replace("\\", "", $sqlr);
         }
         $resultData = array();
-        if (strpos($this->esolDbConn->getDriver(), 'mysql ' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql' )>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $resultData = $this->getArrayDataFromMysqliResult($sqlResult);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql ' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql' )>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 if ($this->getASqlrVarsKeyValue("showResultDetail")) {
                     print pg_affected_rows($sqlResult) . "  lignes ont été affectées.\n";
@@ -440,12 +440,12 @@ class EsolDb
         $this->esolDbConn->setDbConn();
         $result = null;
 
-        if (strpos($this->esolDbConn->getDriver(), 'mysql ' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql' )>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrMysqli($sqlr);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql ' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql' )>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrPgsql($sqlr);
             }
