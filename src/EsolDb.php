@@ -66,7 +66,6 @@ class EsolDb
     {
         $this->environment = $s;
         $this->esolDbConn->setEnvironment($s);
-
     }
 
     /**
@@ -247,11 +246,15 @@ class EsolDb
         if ($numargs == 1) {
             $arg = $arg_list[0];
             try {
-                if (get_class($arg) == 'Symfony\Component\HttpFoundation\Request') {
-                    $this->setASqlrVarsFromRequestQuery($arg->query);
+                if (gettype($arg) == 'object') {
+                    if (get_class($arg) == 'Symfony\Component\HttpFoundation\Request') {
+                        $this->setASqlrVarsFromRequestQuery($arg->query);
+                    } else {
+                        $this->setASqlrVarsFromObject($arg);
+                    }
                 }
             } catch (\Exception $e) {
-//                print $e . PHP_EOL;
+                //                print $e . PHP_EOL;
             }
 
             try {
@@ -259,7 +262,7 @@ class EsolDb
                     $this->setASqlrVarsFromArray($arg);
                 }
             } catch (\Exception $e) {
-//                print $e . PHP_EOL;
+                //                print $e . PHP_EOL;
 
             }
         }
@@ -275,6 +278,14 @@ class EsolDb
     private function setASqlrVarsFromArray($array)
     {
         foreach ($array as $key => $value) {
+            $this->setASqlrVarsKeyValue($key, $value);
+        }
+    }
+
+    private function setASqlrVarsFromObject($object)
+    {
+        foreach ((array)$object as $key => $value) {
+            $key = preg_replace('/\x00.*\x00/', '', $key);
             $this->setASqlrVarsKeyValue($key, $value);
         }
     }
@@ -303,12 +314,12 @@ class EsolDb
             $sqlr = str_replace("\\", "", $sqlr);
         }
         $resultData = array();
-        if (strpos($this->esolDbConn->getDriver(), 'mysql')>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql ' )>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $resultData = $this->getArrayDataFromMysqliResult($sqlResult);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql')>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql ' )>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 if ($this->getASqlrVarsKeyValue("showResultDetail")) {
                     print pg_affected_rows($sqlResult) . "  lignes ont été affectées.\n";
@@ -429,12 +440,12 @@ class EsolDb
         $this->esolDbConn->setDbConn();
         $result = null;
 
-        if (strpos($this->esolDbConn->getDriver(), 'mysql')>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql ' )>-1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrMysqli($sqlr);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql')>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql ' )>-1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrPgsql($sqlr);
             }
@@ -463,5 +474,4 @@ class EsolDb
         }
         return $result;
     }
-
 }
