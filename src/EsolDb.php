@@ -278,6 +278,16 @@ class EsolDb
     private function setASqlrVarsFromArray($array)
     {
         foreach ($array as $key => $value) {
+            if ($value === null ) {
+                $value = '';
+            } else {
+                if ($value === true) {
+                    $value = '1';
+                }
+                if ($value === false) {
+                    $value = '0';
+                }
+            }
             $this->setASqlrVarsKeyValue($key, $value);
         }
     }
@@ -359,6 +369,12 @@ class EsolDb
                 $value = $resultData->$key;
                 $value = stripslashes($value);
                 $value = utf8_decode($value);
+                if ($value === 't') {
+                    $value = true;
+                }
+                if ($value === 'f') {
+                    $value = false;
+                }
                 $tmpData[$key] = $value;
             }
             array_push($arrayData, $tmpData);
