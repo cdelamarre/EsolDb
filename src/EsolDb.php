@@ -372,7 +372,7 @@ class EsolDb
                 if ($value === 't') {
                     $value = true;
                 }
-                if ($value === 'f') {
+                if ($value === 'f' || strlen($value) === 0) {
                     $value = false;
                 }
                 $tmpData[$key] = $value;
