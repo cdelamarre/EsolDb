@@ -271,43 +271,43 @@ class EsolDb
         }
     }
 
-    private function setASqlrVarsKeyValue($key, $value)
+    private function setASqlrVarsKeyValue($k, $v)
     {
-        $this->aSqlrVars[$key] = $value;
+        $this->aSqlrVars[$k] = $v;
     }
     private function setASqlrVarsFromArray($array)
     {
-        foreach ($array as $key => $value) {
-            if ($value === null ) {
-                $value = '';
+        foreach ($array as $k => $v) {
+            if ($v === null) {
+                $v = '';
             } else {
-                if ($value === true) {
-                    $value = '1';
+                if ($v === true) {
+                    $v = '1';
                 }
-                if ($value === false) {
-                    $value = '0';
+                if ($v === false) {
+                    $v = '0';
                 }
             }
-            $this->setASqlrVarsKeyValue($key, $value);
+            $this->setASqlrVarsKeyValue($k, $v);
         }
     }
 
     private function setASqlrVarsFromObject($object)
     {
-        foreach ((array)$object as $key => $value) {
-            $key = preg_replace('/\x00.*\x00/', '', $key);
-            $this->setASqlrVarsKeyValue($key, $value);
+        foreach ((array)$object as $k => $v) {
+            $k = preg_replace('/\x00.*\x00/', '', $k);
+            $this->setASqlrVarsKeyValue($k, $v);
         }
     }
 
-    private function getASqlrVarsKeyValue($key)
+    private function getASqlrVarsKeyValue($k)
     {
         $v = null;
         if (is_object($this->aSqlrVars)) {
-            $v = $this->aSqlrVars->get($key);
+            $v = $this->aSqlrVars->get($k);
         }
-        if (is_array($this->aSqlrVars) && in_array($key, $this->aSqlrVars)) {
-            $v = $this->aSqlrVars->get($key);
+        if (is_array($this->aSqlrVars) && in_array($k, $this->aSqlrVars)) {
+            $v = $this->aSqlrVars->get($k);
         }
         return $v;
     }
@@ -324,12 +324,12 @@ class EsolDb
             $sqlr = str_replace("\\", "", $sqlr);
         }
         $resultData = array();
-        if (strpos($this->esolDbConn->getDriver(), 'mysql' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql') > -1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $resultData = $this->getArrayDataFromMysqliResult($sqlResult);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql') > -1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 if ($this->getASqlrVarsKeyValue("showResultDetail")) {
                     print pg_affected_rows($sqlResult) . "  lignes ont été affectées.\n";
@@ -348,11 +348,11 @@ class EsolDb
         while ($resultData = $sqlResult->fetch_object()) {
             $tmpData = array();
             $vars = get_object_vars($resultData);
-            foreach ($vars as $key => $var) {
-                $value = $resultData->$key;
-                $value = stripslashes($value);
-                $value = utf8_decode($value);
-                $tmpData[$key] = $value;
+            foreach ($vars as $k => $v) {
+                $v = $resultData->$k;
+                $v = stripslashes($v);
+                $v = utf8_decode($v);
+                $tmpData[$k] = $v;
             }
             array_push($arrayData, $tmpData);
         }
@@ -362,20 +362,25 @@ class EsolDb
     private function getArrayDataFromPgsqlResult($sqlResult)
     {
         $arrayData = array();
+
         while ($resultData = pg_fetch_object($sqlResult)) {
             $tmpData = array();
             $vars = get_object_vars($resultData);
-            foreach ($vars as $key => $var) {
-                $value = $resultData->$key;
-                $value = stripslashes($value);
-                $value = utf8_decode($value);
-                if ($value === 't') {
-                    $value = true;
+            $i = 0;
+            foreach ($vars as $k => $v) {
+                $v = stripslashes($v);
+                $v = utf8_decode($v);
+                if (pg_field_size($sqlResult, $i) == 1 && $v === 't') {
+                    $v = true;
                 }
-                if ($value === 'f' || strlen($value) === 0) {
-                    $value = false;
+                if (pg_field_size($sqlResult, $i) == 1 && $v === 'f') {
+                    $v = false;
                 }
-                $tmpData[$key] = $value;
+                if (pg_field_size($sqlResult, $i) == 1 && strlen($v) == 0) { //boolean null
+                    $v = false;
+                }
+                $tmpData[$k] = $v;
+                $i++;
             }
             array_push($arrayData, $tmpData);
         }
@@ -456,12 +461,12 @@ class EsolDb
         $this->esolDbConn->setDbConn();
         $result = null;
 
-        if (strpos($this->esolDbConn->getDriver(), 'mysql' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'mysql') > -1) {
             if (in_array('mysqli', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrMysqli($sqlr);
             }
         }
-        if (strpos($this->esolDbConn->getDriver(), 'pgsql' )>-1) {
+        if (strpos($this->esolDbConn->getDriver(), 'pgsql') > -1) {
             if (in_array('pgsql', get_loaded_extensions())) {
                 $result = $this->getResultFromSqlrPgsql($sqlr);
             }
