@@ -196,7 +196,7 @@ class EsolDb
     {
         $esolDbSqlr = new Sqlr();
         $esolDbSqlr->setASqlrVars($this->getASqlrVars());
-        if (strlen($this->getSqlFilePath()) > 0) {
+        if (strlen($this->getSqlFilePath()) > 0  && strlen($this->sqlr) == 0) {
             $esolDbSqlr->setSqlFilePath($this->getSqlFilePath());
             $this->setSqlr($esolDbSqlr->getRawSqlrFromFilePath());
         }
